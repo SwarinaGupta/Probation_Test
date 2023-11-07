@@ -1,0 +1,11 @@
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(400) NOT NULL
+);
+
+CREATE TABLE items (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(400) NOT NULL,
+    description TEXT,
+    category_id INT REFERENCES categories(id)
+);

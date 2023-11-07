@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;test.CtaegoryManager&apos; to &apos;CategoryManager&apos;&#x0D;&#x0A;- Original project: &apos;Probation_Test&apos;&#x0D;&#x0A;- Original element: &apos;test.CtaegoryManager&apos;&#x0D;&#x0A;- Renamed element: &apos;test.CategoryManager&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;CtaegoryManager&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;test{CtaegoryManager.java[CtaegoryManager" matchStrategy="1" name="CategoryManager" qualified="false" references="true" similarDeclarations="false" stamp="1699341737279" textual="false" version="1.0"/>
+</session>

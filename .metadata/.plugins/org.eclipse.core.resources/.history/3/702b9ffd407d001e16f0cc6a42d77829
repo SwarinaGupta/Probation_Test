@@ -1,0 +1,55 @@
+package test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Scanner;
+public class Main
+{
+	public static void main(String[] args) {
+        // Database connection setup
+        String Url = "jdbc:postgresql://localhost:5433/Probation_Test";
+        String User = "postgres";
+        String Password = "root";
+
+            try{
+                Class.forName("org.postgresql.Driver");
+                Connection connection=DriverManager.getConnection(Url, User, Password);
+                if(connection!=null)
+                    System.out.println("Connection OK");
+                else
+                    System.out.println("Connection Failed");
+                CategoryManager categoryManager = new CategoryManager(connection);
+                ItemManager itemManager = new ItemManager(connection);
+                StatisticsManager statisticsManager = new StatisticsManager(connection);
+     
+            }
+            catch(Exception e)
+                {
+                    System.out.println(e);
+                }
+            CategoryManager categoryManager = new CategoryManager(connection);
+            ItemManager itemManager = new ItemManager(connection);
+            StatisticsManager statisticsManager = new StatisticsManager(connection);
+            
+            while (true) {
+                System.out.println("1. Add a new category");
+                System.out.println("2. List all categories");
+                System.out.println("3. Add a new item");
+                System.out.println("4. List items in a specific category");
+                System.out.println("5. Calculate and display statistics");
+                System.out.println("6. Exit");
+                
+                Scanner scanner = new Scanner(System.in);
+	            int choice = scanner.nextInt();
+	            switch (choice) {
+                case 1:
+                    // Add a new category
+                    System.out.print("Enter the category name: ");
+                    String categoryName = getUserInput();
+                    Category newCategory = new Category(0, categoryName);
+                    CategoryManager.addCategory(newCategory);
+                    System.out.println("Category added successfully.");
+                    break;
+}
+}

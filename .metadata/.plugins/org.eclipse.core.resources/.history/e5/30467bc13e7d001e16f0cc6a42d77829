@@ -1,0 +1,23 @@
+package test;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class CategoryManager 
+{
+	private Connection connection;
+
+    public CategoryManager(Connection connection) {
+        this.connection = connection;
+    }
+    public void addCategory(Category category) {
+        String insertQuery = "INSERT INTO categories (name) VALUES (?)";
+        try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
+            statement.setString(1, category.getName());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

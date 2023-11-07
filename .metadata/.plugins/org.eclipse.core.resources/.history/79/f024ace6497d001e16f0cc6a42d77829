@@ -1,0 +1,42 @@
+package test;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CategoryManager 
+{
+	private Connection conn;
+
+    public CategoryManager(Connection conn) {
+        this.conn = conn;
+    }
+    public void addNewCategory(Category category) {
+    	try {
+            String sql = "INSERT INTO categories (name) VALUES (?)";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, category.getName());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Category> getAllCategories() {
+        List<Category> categories = new ArrayList<>();
+        String selectQuery = "SELECT id, name FROM categories";
+        try (PreparedStatement statement = conn.prepareStatement(selectQuery);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                Category category = new Category(id, name);
+                categories.add(category);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
+}

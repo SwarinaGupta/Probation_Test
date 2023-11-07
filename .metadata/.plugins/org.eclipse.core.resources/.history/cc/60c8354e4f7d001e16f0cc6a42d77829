@@ -1,0 +1,76 @@
+package test;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Statistics 
+{
+	    private Connection connection;
+
+	    public Statistics(Connection connection) {
+	        this.connection = connection;
+	    }
+
+	    public int getTotalNumberOfItems() {
+	        int totalItems = 0;
+	        String countQuery = "SELECT COUNT(*) FROM items";
+	        try (PreparedStatement statement = connection.prepareStatement(countQuery);
+	             ResultSet resultSet = statement.executeQuery()) {
+	            if (resultSet.next()) {
+	                totalItems = resultSet.getInt(1);
+	            }
+	        } catch (SQLException e) {
+	        	System.err.println("Error in getting total number of items: " + e.getMessage());
+	        }
+	        return totalItems;
+	    }
+
+	    public List<String> getCategoryNames() {
+	        List<String> categoryNames = new ArrayList<>();
+	        String query = "SELECT categories.name FROM categories";
+	        try (PreparedStatement statement = connection.prepareStatement(query);
+	             ResultSet resultSet = statement.executeQuery()) {
+	            while (resultSet.next()) {
+	                String categoryName = resultSet.getString(1);
+	                categoryNames.add(categoryName);
+	            }
+	        } catch (SQLException e) {
+	        	System.err.println("Error in adding categories Name" + e.getMessage());
+	        }
+	        return categoryNames;
+	    }
+
+	    public List<Integer> getCategoryItemCounts() {
+	        List<Integer> categoryItemCounts = new ArrayList<>();
+	        String sql = "SELECT COUNT(items.id) " + "FROM categories LEFT JOIN items ON categories.id = items.category_id " +"GROUP BY categories.name";
+	        try (PreparedStatement statement = connection.prepareStatement(sql);
+	             ResultSet resultSet = statement.executeQuery()) {
+	            while (resultSet.next()) {
+	                int itemCount = resultSet.getInt(1);
+	                categoryItemCounts.add(itemCount);
+	            }
+	        } catch (SQLException e) {
+	        	System.err.println("Error in getting Category Item" + e.getMessage());
+	        }
+	        return categoryItemCounts;
+	    }
+	    
+	    public void displayStatistics() {
+	        int totalItems = getTotalNumberOfItems();
+	        System.out.println("Total number of items: " + totalItems);
+
+	        List<String> categoryNames = getCategoryNames();
+	        List<Integer> categoryItemCounts = getCategoryItemCounts();
+
+	        for (int i = 1; i <= categoryNames.size(); i++) {
+	            String categoryName = categoryNames.get(i);
+	            int itemCount = categoryItemCounts.get(i);
+	            System.out.println("Category: " + categoryName +", Item count: " + itemCount);
+	                    
+	        }
+	    }
+	}

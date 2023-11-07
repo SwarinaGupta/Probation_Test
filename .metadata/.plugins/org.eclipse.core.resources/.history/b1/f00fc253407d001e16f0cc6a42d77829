@@ -1,0 +1,62 @@
+package test;
+
+public class Statistics 
+{
+	    private Connection connection;
+
+	    public Statistics(Connection connection) {
+	        this.connection = connection;
+	    }
+
+	    public int getTotalNumberOfItems() {
+	        int totalItems = 0;
+	        String countQuery = "SELECT COUNT(*) FROM items";
+	        try (PreparedStatement statement = connection.prepareStatement(countQuery);
+	             ResultSet resultSet = statement.executeQuery()) {
+	            if (resultSet.next()) {
+	                totalItems = resultSet.getInt(1);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return totalItems;
+	    }
+
+	    public List<CategoryStatistics> getCategoryStatistics() {
+	        List<CategoryStatistics> categoryStatistics = new ArrayList<>();
+	        String selectQuery = "SELECT categories.id, categories.name, COUNT(items.id) " +
+	                             "FROM categories LEFT JOIN items ON categories.id = items.category_id " +
+	                             "GROUP BY categories.id, categories.name";
+	        try (PreparedStatement statement = connection.prepareStatement(selectQuery);
+	             ResultSet resultSet = statement.executeQuery()) {
+	            while (resultSet.next()) {
+	                int categoryId = resultSet.getInt(1);
+	                String categoryName = resultSet.getString(2);
+	                int itemCount = resultSet.getInt(3);
+	                CategoryStatistics stats = new CategoryStatistics(categoryId, categoryName, itemCount);
+	                categoryStatistics.add(stats);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return categoryStatistics;
+	    }
+
+	    public void displayStatistics() {
+	        int totalItems = getTotalNumberOfItems();
+	        System.out.println("Total number of items: " + totalItems);
+
+	        List<CategoryStatistics> categoryStats = getCategoryStatistics();
+	        for (CategoryStatistics stats : categoryStats) {
+	            int categoryId = stats.getCategoryId();
+	            String categoryName = stats.getCategoryName();
+	            int itemCount = stats.getItemCount();
+	            double percentage = (double) itemCount / totalItems * 100;
+	            System.out.println("Category: " + categoryName +
+	                    ", Item count: " + itemCount +
+	                    ", Percentage: " + percentage + "%");
+	        }
+	    }
+	}
+
+}
